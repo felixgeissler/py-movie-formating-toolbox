@@ -55,6 +55,17 @@ def writeLogFile(path):
     f.close()
     return logPath
 
+def replaceSpecialChars(str):
+    charsToReplace = (
+        (u'ä', 'a'),
+        (u'ö', 'o'),
+        (u'ü', 'u'),
+        (u'ß', 'ss'),
+    )
+    for formStr, toStr in charsToReplace:
+        str = str.replace(formStr, toStr)
+    return str
+
 def main():
     regExPattern=re.compile(r"\(\b(19|20)\d{2}\b\)")
     for arg in sys.argv[1:]:
@@ -75,6 +86,7 @@ def main():
                     # dir is not tagged
                     queryString=fname.replace(" ", "_")
                     queryString=queryString.lower()
+                    queryString=replaceSpecialChars(queryString)
                     endpoint="https://v2.sg.media-imdb.com/suggestion/" + \
                         queryString[0] + "/" + queryString + ".json"
                     response=requests.get(endpoint)
